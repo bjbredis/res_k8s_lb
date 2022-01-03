@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-lb # deployment name
+  labels:
+    app: redis-lb # deployment label
+spec:
+  selector:
+    matchLabels:
+      app: redis-lb # which pods is the deployment managing, as defined by the pod template
+  template: # pod template
+    metadata:
+      labels:
+        app: redis-lb 
+    spec:  
+      containers:
+      - name:  redis-lb # Container name 
+        image: maguec/haproxy-tcp #repo/image:tag
+#### uncomment the following two lines while you are setting up your 
+        # command: [ "/bin/bash", "-c", "--" ]
+        # args: [ "while true; do sleep 30; done;" ]
+####
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
+        ports:  
+        - containerPort: 2112 # exposed container port for haproxy stats
+          protocol: TCP
+        - containerPort: 10000 # exposed container port to the RES database
+          protocol: TCP
+        env:
+          - name: HAPROXY_UPSTREAM_HOSTS
+            value: "172.30.190.56"
+          - name: HAPROXY_UPSTREAM_PORT
+            value: "16847"
+          # - name: HAPROXY_STATS_USER
+          #   value: "/opt/redislabs/redis-lb/config/logback.xml"
+          # - name: HAPROXY_STATS_PASSWORD
+          #   value: "/opt/redislabs/redis-lb/config/logback.xml"
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-lb-service       # name should not be 'redis-lb' 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 10000
+      targetPort: 10000
+  selector:
+    app: redis-lb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-lb-stats-service       # name should not be 'redis-lb' 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 2112
+      targetPort: 2112
+  selector:
+    app: redis-lb
