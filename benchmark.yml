@@ -19,9 +19,9 @@ spec:
       - name: benchmark
         image: redislabs/memtier_benchmark #:b1b1d10
         # args: ["-d", "100", "-n", "20000000", "--pipeline=2", "-a", "$(REDIS_PASSWORD)", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)"]
-        # args: ["-d", "100", "-n", "20000000", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)"]
-        command: [ "/bin/bash", "-c", "--" ]
-        args: [ "while true; do sleep 30; done;" ]
+        args: ["-d", "100", "-n", "20000000", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)"]
+        # command: [ "/bin/bash", "-c", "--" ]
+        # args: [ "while true; do sleep 30; done;" ]
         resources:
           limits:
             cpu: "100m"
