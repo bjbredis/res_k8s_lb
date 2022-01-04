@@ -31,9 +31,9 @@ spec:
             memory: "128Mi"
         env:
          - name: REDIS_PORT
-           value: "10000"
+           value: "16379"
          - name: REDIS_SERVER
-           value: redis-lb-service
+           value: "172.30.45.103"
           #  valueFrom:  # read the value from a K8s Secret
                 # secretKeyRef:
                 #   key: service_name

@@ -31,13 +31,13 @@ spec:
         ports:  
         - containerPort: 2112 # exposed container port for haproxy stats
           protocol: TCP
-        - containerPort: 10000 # exposed container port to the RES database
+        - containerPort: 16379 # exposed container port to the RES database
           protocol: TCP
         env:
           - name: HAPROXY_UPSTREAM_HOSTS
-            value: "172.30.190.56"
+            value: "172.30.81.165" #172.30.81.165,172.30.190.110,172.30.161.109
           - name: HAPROXY_UPSTREAM_PORT
-            value: "16847"
+            value: "16379"
           # - name: HAPROXY_STATS_USER
           #   value: "/opt/redislabs/redis-lb/config/logback.xml"
           # - name: HAPROXY_STATS_PASSWORD
@@ -51,8 +51,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 10000
-      targetPort: 10000
+    - port: 16379
+      targetPort: 16379
   selector:
     app: redis-lb
 ---
