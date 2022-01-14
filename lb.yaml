@@ -15,7 +15,7 @@ spec:
     spec:  
       containers:
       - name:  redis-lb # Container name 
-        image: maguec/haproxy-tcp #repo/image:tag
+        image: maguec/haproxy-tcp:variableports #repo/image:tag
 #### uncomment the following two lines while you are setting up your 
         # command: [ "/bin/bash", "-c", "--" ]
         # args: [ "while true; do sleep 30; done;" ]
@@ -35,7 +35,9 @@ spec:
           protocol: TCP
         env:
           - name: HAPROXY_UPSTREAM_HOSTS  
-            value: "172.30.81.165:16379" # comma separated <host>:<port> pairs
+            value: "172.30.6.123:12252,172.30.232.184:14233" # comma separated <host>:<port> pairs
+          - name: HAPROXY_LISTEN_PORT
+            value: "16379"
           # - name: HAPROXY_STATS_USER
           #   value: "/opt/redislabs/redis-lb/config/logback.xml"
           # - name: HAPROXY_STATS_PASSWORD
