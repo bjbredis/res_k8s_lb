@@ -29,15 +29,15 @@ spec:
             cpu: "1000m"
             memory: "256Mi"
         ports:  
-        - name: stats
-          containerPort: 2112 # exposed container port for haproxy stats
-          protocol: TCP
+        # - name: stats
+        #   containerPort: 2112 # exposed container port for haproxy stats
+        #   protocol: TCP
         - name: data
           containerPort: 10000 # exposed container port to the RES database
           protocol: TCP
         env:
           - name: NUTCRACKER_UPSTREAM_HOSTS 
-            value: "10.130.3.96:12252,10.130.3.119:14233"
+            value: "172.30.6.123:12252,172.30.232.184:14233"
             # value: "172.30.6.123:12252,172.30.232.184:14233" # comma separated <host>:<port> pairs
           - name: NUTCRACKER_UPSTREAM_CONNS
             value: "25"
@@ -61,18 +61,5 @@ spec:
     - name: data
       port: 10000
       targetPort: 10000
-  selector:
-    app: twem-lb
----
-apiVersion: v1
-kind: Service
-metadata:
-  # name: twem-lb-stats-service       # name should not be 'twem-lb' 
-  name: twem-lb-stats-svc       # name should not be 'twem-lb' 
-spec:
-  type: ClusterIP
-  ports:
-    - port: 2112
-      targetPort: 2112
   selector:
     app: twem-lb
