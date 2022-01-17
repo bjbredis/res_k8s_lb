@@ -1,6 +1,5 @@
 # res_k8s_lb
-rladmin tune db ecom-redb-s1 slave_buffer 10240
-rladmin tune db ecom-redb-s2 slave_buffer 10240
+
 
 1. Set the proxy threads higher
    ```
@@ -44,3 +43,9 @@ curl -v -k -u <USERNAME>:<PASSWORD> -X PUT -H "Content-Type: application/json" -
 ```
 Normally we would backup the original file in case the patch does not work.  Since this is in k8s environment, we can always restart the nodes (one by one) and the original file will be used again so no need to backup before replace.
 As for validating step, I think you can use the same setup you did to reproduce the syncer restart with multiple WAIT commands.
+
+```
+oc cp rl_syncer rec-replica-1:/opt/redislabs/bin/rl_syncer; 
+oc rsh rec-replica-1 md5sum /opt/redislabs/bin/rl_syncer; 
+oc rsh rec-replica-1 supervisorctl restart dmcproxy;
+```
