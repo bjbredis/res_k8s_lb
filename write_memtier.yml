@@ -32,13 +32,13 @@ spec:
             memory: "1Gi"
         env:
          - name: NUM_THREADS
-           value: "4"
+           value: "2"
          - name: NUM_CLIENTS
-           value: "4"
+           value: "2"
          - name: RATIO
            value: "1:0" # w:r
          - name: DATA_MAX
-           value: "20480000" #10MB
+           value: "20480000" #20MB
          - name: REDIS_PORT
            valueFrom:  # read the value from a K8s Secret
                 secretKeyRef:
