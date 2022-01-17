@@ -20,8 +20,8 @@
 	```
 	ccs-cli hset bdb:6 internal_max_bulk_len 10737418240; rlutil dmc_reconf bdb=6
 
-	rlutil config_set bdb=1 conf_keyword=client-query-buffer-limit conf_value=10G
-	rlutil config_set bdb=1 conf_keyword=proto-max-bulk-len conf_value=10G
+	rlutil config_set bdb=6 conf_keyword=client-query-buffer-limit conf_value=10G
+	rlutil config_set bdb=6 conf_keyword=proto-max-bulk-len conf_value=10G
 
 	rladmin tune db ecom-redb-m slave_buffer 2048
 	rladmin tune db ecom-redb-s1 slave_buffer 10240
