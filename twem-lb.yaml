@@ -39,6 +39,8 @@ spec:
           - name: NUTCRACKER_UPSTREAM_HOSTS 
             value: "10.130.3.96:12252,10.130.3.119:14233"
             # value: "172.30.6.123:12252,172.30.232.184:14233" # comma separated <host>:<port> pairs
+          - name: NUTCRACKER_UPSTREAM_CONNS
+            value: "25"
           - name: NUTCRACKER_LISTEN_PORT
             value: "10000"
           - name: NUTCRACKER_PASSWORD
