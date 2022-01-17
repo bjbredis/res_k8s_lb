@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twem-lb # deployment name
+  labels:
+    app: twem-lb # deployment label
+spec:
+  selector:
+    matchLabels:
+      app: twem-lb # which pods is the deployment managing, as defined by the pod template
+  template: # pod template
+    metadata:
+      labels:
+        app: twem-lb 
+    spec:  
+      containers:
+      - name:  twem-lb # Container name 
+        image: maguec/twem-lb #maguec/haproxy-tcp:latest
+#### uncomment the following two lines while you are setting up your 
+        # command: [ "/bin/bash", "-c", "--" ]
+        # args: [ "while true; do sleep 30; done;" ]
+####
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "3000m"
+            memory: "1024Mi"
+          requests:
+            cpu: "1000m"
+            memory: "256Mi"
+        ports:  
+        - name: stats
+          containerPort: 2112 # exposed container port for haproxy stats
+          protocol: TCP
+        - name: data
+          containerPort: 10000 # exposed container port to the RES database
+          protocol: TCP
+        env:
+          - name: NUTCRACKER_UPSTREAM_HOSTS 
+            value: "10.130.3.96:12252,10.130.3.119:14233"
+            # value: "172.30.6.123:12252,172.30.232.184:14233" # comma separated <host>:<port> pairs
+          - name: NUTCRACKER_LISTEN_PORT
+            value: "10000"
+          - name: NUTCRACKER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: redb-rep1
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # name: twem-lb-service       # name should not be 'twem-lb' 
+  name: twem-lb-svc       # name should not be 'twem-lb' 
+spec:
+  type: ClusterIP
+  ports:
+    - name: data
+      port: 10000
+      targetPort: 10000
+  selector:
+    app: twem-lb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # name: twem-lb-stats-service       # name should not be 'twem-lb' 
+  name: twem-lb-stats-svc       # name should not be 'twem-lb' 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 2112
+      targetPort: 2112
+  selector:
+    app: twem-lb
