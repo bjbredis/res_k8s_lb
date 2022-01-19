@@ -19,26 +19,26 @@ spec:
       - name: benchmark
         image: redislabs/memtier_benchmark #:b1b1d10
         # args: ["-d", "100", "-n", "20000000", "--pipeline=2", "-a", "$(REDIS_PASSWORD)", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)"]
-        args: ["--key-pattern=R:R", "--test-time=720", "-x", "100", "-R", "--data-size-range=1000-$(DATA_MAX)", "--data-size-pattern=R", "--ratio=$(RATIO)", "-t","$(NUM_THREADS)", "-c", "$(NUM_CLIENTS)", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)", "-a", "$(REDIS_PASSWORD)"]
-        # args: ["--key-pattern=R:R", "--test-time=720", "-x", "100", "-R", "--data-size-range=1000-$(DATA_MAX)", "--data-size-pattern=R", "--wait-ratio=500000:1", "--num-slaves=1-1", "--wait-timeout=5000-10000", "--ratio=$(RATIO)", "-t","$(NUM_THREADS)", "-c", "$(NUM_CLIENTS)", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)", "-a", "$(REDIS_PASSWORD)"]        
+        args: ["--key-pattern=R:R", "--test-time=720", "-x", "100", "-R", "--data-size-range=100-$(DATA_MAX)", "--data-size-pattern=R", "--ratio=$(RATIO)", "--expiry-range=20-50000", "-t","$(NUM_THREADS)", "-c", "$(NUM_CLIENTS)", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)", "-a", "$(REDIS_PASSWORD)"]
+        # args: ["--key-pattern=R:R", "--test-time=720", "-x", "100", "-R", "--data-size-range=1000-$(DATA_MAX)", "--data-size-pattern=R", "--wait-ratio=500000:1", "--num-slaves=1-1", "--wait-timeout=5000-10000", "--ratio=$(RATIO)", , "--expiry-range=20-50000" "-t","$(NUM_THREADS)", "-c", "$(NUM_CLIENTS)", "--pipeline=2", "-s", "$(REDIS_SERVER)", "-p", "$(REDIS_PORT)", "-a", "$(REDIS_PASSWORD)"]        
         # command: [ "/bin/bash", "-c", "--" ]
         # args: [ "while true; do sleep 30; done;" ]
         resources:
           limits:
-            cpu: "500m"
+            cpu: "50m"
             memory: "1Gi"
           requests:
-            cpu: "500m"
+            cpu: "50m"
             memory: "1Gi"
         env:
          - name: NUM_THREADS
            value: "2"
          - name: NUM_CLIENTS
-           value: "2"
+           value: "1"
          - name: RATIO
-           value: "1:0" # w:r
+           value: "1:3" # w:r
          - name: DATA_MAX
-           value: "20480000" #20MB
+           value: "1048000" #1MB
          - name: REDIS_PORT
            valueFrom:  # read the value from a K8s Secret
                 secretKeyRef:
